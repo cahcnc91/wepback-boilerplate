@@ -17,6 +17,7 @@
     "babel-cli": "*",
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.4",
+    "babel-plugin-emotion": "^10.0.33",
     "babel-plugin-transform-runtime": "*",
     "babel-polyfill": "*",
     "babel-preset-env": "^1.7.0",
@@ -36,8 +37,11 @@
     "webpack-hot-middleware": "^2.25.0"
   },
   "dependencies": {
+    "@emotion/core": "^10.0.28",
+    "@emotion/styled": "^10.0.27",
     "express": "^4.17.1",
     "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "react-dom": "^16.13.1",
+    "react-emotion": "^10.0.0"
   }
 }
