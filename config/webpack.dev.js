@@ -1,10 +1,9 @@
 const path = require("path");
 const webpack = require("webpack");
-const HTMLWebpackPlugin = require('html-webpack-plugin')
+const HTMLWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
   entry: {
-    // babel-polyfill inside the array before main
     main: ["./src/main.js"],
   },
   mode: "development",
@@ -16,22 +15,21 @@ module.exports = {
   devServer: {
     contentBase: "dist",
     overlay: true,
-    hot: true,
     stats: {
       colors: true,
     },
-    devtool: 'source-map'
   },
+  devtool: "source-map",
   module: {
     rules: [
       {
-        test: /\/js$/,
+        test: /\.js$/,
+        exclude: /node_modules/,
         use: [
           {
             loader: "babel-loader",
           },
         ],
-        exclude: /node_modules/,
       },
       {
         test: /\.css$/,
@@ -39,35 +37,42 @@ module.exports = {
           {
             loader: "style-loader",
           },
-          {
-            loader: "css-loader",
-          },
+          { loader: "css-loader" },
         ],
       },
       {
-        test: /\.html$/,
+        test: /\.sass$/,
         use: [
           {
-            loader: "html-loader",
-            options: {
-              attributes: {
-                list: [
-                  {
-                    // Tag name
-                    tag: "img",
-                    // Attribute name
-                    attribute: "src",
-                    // Type of processing, can be `src` or `scrset`
-                    type: "src",
-                  },
-                ],
-              },
-            },
+            loader: "style-loader",
           },
+          { loader: "css-loader" },
+          { loader: "sass-loader" },
         ],
       },
       {
-        test: /\.(jpg|png|gif)$/,
+        test: /\.styl$/,
+        use: [
+          {
+            loader: "style-loader",
+          },
+          { loader: "css-loader" },
+          { loader: "postcss-loader" },
+          { loader: "stylus-loader" },
+        ],
+      },
+      {
+        test: /\.less$/,
+        use: [
+          {
+            loader: "style-loader",
+          },
+          { loader: "css-loader" },
+          { loader: "less-loader" },
+        ],
+      },
+      {
+        test: /\.jpg$/,
         use: [
           {
             loader: "file-loader",
@@ -77,13 +82,20 @@ module.exports = {
           },
         ],
       },
+      {
+        test: /\.html$/,
+        use: [
+          {
+            loader: "html-loader",
+          },
+        ],
+      },
     ],
   },
   plugins: [
-      new webpack.HotModuleReplacementPlugin(),
-      new HTMLWebpackPlugin({
-          template: "./src/index.html"
-      })
-    
-    ],
+    new webpack.HotModuleReplacementPlugin(),
+    new HTMLWebpackPlugin({
+      template: "./src/index.html",
+    }),
+  ],
 };
