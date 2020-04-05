@@ -11,13 +11,25 @@ body {
     justify-content: center;
 }
 
-img {
+.profile > img {
     border-radius: 100%;
     width: 300px;
     box-shadow: 0 0 20px black;
 }
 
-h1 {
+.profile > h1 {
  text-shadow: 0 0 20px black;
  font-size: 5rem;
 }
+
+.content {
+    background-color: #ffffe0;
+    box-shadow: 0 0 20px black;
+    font-family: sans-serif;
+    line-height: 1.5em;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 10px;
+  }
+  

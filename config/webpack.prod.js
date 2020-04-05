@@ -1,29 +1,22 @@
 const path = require("path");
 const webpack = require("webpack");
 const HTMLWebpackPlugin = require("html-webpack-plugin");
-const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
-  .BundleAnalyzerPlugin;
+// const isProd = process.env.NODE_ENV === "production";
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const MinifyPlugin = require("babel-minify-webpack-plugin");
+const UglifyJSPlugin = require("uglifyjs-webpack-plugin");
+const CompressionPlugin = require("compression-webpack-plugin");
 
 module.exports = {
   entry: {
-    main: [
-      "babel-runtime/regenerator",
-      "webpack-hot-middleware/client?reload=true",
-      "./src/main.js",
-    ],
+    main: ["./src/main.js"],
   },
-  mode: "development",
+  mode: "production",
   output: {
     filename: "[name]-bundle.js",
     path: path.resolve(__dirname, "../dist"),
     publicPath: "/",
-  },
-  devServer: {
-    contentBase: "dist",
-    overlay: true,
-    stats: {
-      colors: true,
-    },
   },
   optimization: {
     splitChunks: {
@@ -37,7 +30,7 @@ module.exports = {
       },
     },
   },
-  devtool: "source-map",
+
   module: {
     rules: [
       {
@@ -52,10 +45,10 @@ module.exports = {
       {
         test: /\.css$/,
         use: [
+          MiniCssExtractPlugin.loader,
           {
-            loader: "style-loader",
+            loader: "css-loader",
           },
-          { loader: "css-loader" },
         ],
       },
       {
@@ -69,34 +62,42 @@ module.exports = {
           },
         ],
       },
-      {
-        test: /\.html$/,
-        use: [
-          {
-            loader: "html-loader",
-          },
-        ],
-      },
+      // {
+      //   test: /\.html$/,
+      //   use: [
+      //     {
+      //       loader: "html-loader",
+      //     },
+      //   ],
+      // },
       {
         test: /\.md$/,
-        use: [{ loader: "markdown-with-front-matter-loader" }],
+        use: [
+          {loader: 'html-loader'},
+          {loader: 'markdown-with-front-matter-loader'}
+        ]
       },
     ],
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
+    new OptimizeCSSAssetsPlugin(),
+    new MiniCssExtractPlugin({
+      filename: "[name]-[contenthash].css",
+    }),
     new webpack.DefinePlugin({
       "process.env": {
-        NODE_ENV: JSON.stringify("development"),
-      },
+        NODE_ENV: JSON.stringify(env.NODE_ENV)
+      }
     }),
     new HTMLWebpackPlugin({
       template: "./src/index.ejs",
       inject: true,
-      title: "Link's Journal",
+      title: "Link's Journal"
     }),
-    new BundleAnalyzerPlugin({
-      generateStatsFile: true,
+    // new MinifyPlugin()
+    new UglifyJSPlugin(),
+    new CompressionPlugin({
+      algorithm: "gzip",
     }),
   ],
 };

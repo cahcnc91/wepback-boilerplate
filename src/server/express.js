@@ -1,6 +1,10 @@
-  
 import express from "express"
 const server = express()
+import path from "path"
+
+const isProd = process.env.NODE_ENV === "production";
+
+if(!isProd){
 
 const webpack = require("webpack")
 const config = require("../../config/webpack.dev.js")
@@ -13,21 +17,19 @@ const webpackDevMiddleware = require("webpack-dev-middleware")(
 
 const webpackHotMiddlware = require("webpack-hot-middleware")(
   compiler,
-  {
-    'log'       : console.log,
-    'path'      : '/__webpack_hmr',
-    'heartbeat' : 10 * 1000
-  }
+  config.devServer
 )
 
 server.use(webpackDevMiddleware)
 server.use(webpackHotMiddlware)
-console.log("Middleware enabled")
+}
 
-const staticMiddleware = express.static("dist")
-server.use(staticMiddleware)
+// const staticMiddleware = express.static("dist")
+const expressStaticGzip = require('express-static-gzip')
+// server.use(staticMiddleware)
+server.use(expressStaticGzip("dist"))
 
-const PORT = 8080
+const PORT = process.env.PORT || 8080
 server.listen(PORT, () => {
   console.log(`Server listening on http://localhost:${PORT}`)
 })
