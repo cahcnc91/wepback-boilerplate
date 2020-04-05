@@ -24,8 +24,10 @@ server.use(webpackDevMiddleware)
 server.use(webpackHotMiddlware)
 }
 
-const staticMiddleware = express.static("dist")
-server.use(staticMiddleware)
+// const staticMiddleware = express.static("dist")
+const expressStaticGzip = require('express-static-gzip')
+// server.use(staticMiddleware)
+server.use(expressStaticGzip("dist"))
 
 const PORT = process.env.PORT || 8080
 server.listen(PORT, () => {

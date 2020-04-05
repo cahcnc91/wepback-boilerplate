@@ -3,3 +3,5 @@
 require("./main.css")
 require("./images/link.jpg")
 require("./index.html")
+console.log(`${process.env.NODE_ENV}`)
+
