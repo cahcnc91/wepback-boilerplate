@@ -1,44 +1,54 @@
-const path = require("path")
-const webpack = require("webpack")
-const HTMLWebpackPlugin = require("html-webpack-plugin")
+const path = require("path");
+const webpack = require("webpack");
+const HTMLWebpackPlugin = require("html-webpack-plugin");
+const VueLoaderPlugin = require('vue-loader/lib/plugin')
 
 module.exports = {
   entry: {
-    main: ["./src/main.js"]
+    main: ["./src/main.js"],
   },
   mode: "development",
   output: {
     filename: "[name]-bundle.js",
     path: path.resolve(__dirname, "../dist"),
-    publicPath: "/"
+    publicPath: "/",
   },
   devServer: {
     contentBase: "dist",
     overlay: true,
     stats: {
-      colors: true
-    }
+      colors: true,
+    },
   },
   devtool: "source-map",
+  resolve: {
+    alias: {
+      vue$: "vue/dist/vue.esm.js"
+    }
+  },
   module: {
     rules: [
+      {
+        test: /\.vue$/,
+        use: [{loader: "vue-loader"}],
+      },
       {
         test: /\.js$/,
         exclude: /node_modules/,
         use: [
           {
-            loader: "babel-loader"
-          }
-        ]
+            loader: "babel-loader",
+          },
+        ],
       },
       {
         test: /\.css$/,
         use: [
           {
-            loader: "style-loader"
+            loader: "style-loader",
           },
-          { loader: "css-loader" }
-        ]
+          { loader: "css-loader" },
+        ],
       },
       {
         test: /\.jpg$/,
@@ -46,25 +56,26 @@ module.exports = {
           {
             loader: "file-loader",
             options: {
-              name: "images/[name].[ext]"
-            }
-          }
-        ]
+              name: "images/[name].[ext]",
+            },
+          },
+        ],
       },
       {
         test: /\.html$/,
         use: [
           {
-            loader: "html-loader"
-          }
-        ]
-      }
-    ]
+            loader: "html-loader",
+          },
+        ],
+      },
+    ],
   },
   plugins: [
+    new VueLoaderPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new HTMLWebpackPlugin({
-      template: "./src/index.html"
-    })
-  ]
-}
+      template: "./src/index.html",
+    }),
+  ],
+};
